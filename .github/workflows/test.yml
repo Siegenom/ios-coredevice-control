@@ -1,0 +1,38 @@
+name: test
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.10.11"
+          architecture: x64
+      - name: Install using the supported Windows setup
+        run: ./setup.ps1 -Python python
+      - name: Verify native dependencies
+        run: ./.venv/Scripts/python.exe -c "import sslpsk_pmd3.sslpsk"
+      - name: Check dependency consistency
+        run: ./.venv/Scripts/python.exe -m pip check
+      - name: Compile Python sources
+        run: ./.venv/Scripts/python.exe -m compileall -q src tests tools
+      - name: Unit tests
+        run: ./.venv/Scripts/python.exe -m unittest discover -s tests -v
+      - name: Release scan
+        run: ./.venv/Scripts/python.exe tools/check_release.py
+      - name: Check whitespace
+        run: git diff-tree --check --root HEAD

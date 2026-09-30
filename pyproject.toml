@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ipad-hybrid-control"
+version = "0.3.2"
+description = "iOS device control using RemotePairing, RSD, and CoreDevice services"
+readme = "README.md"
+requires-python = ">=3.10,<3.11"
+license = "GPL-3.0-or-later"
+authors = [{ name = "ipad-hybrid-control contributors" }]
+dependencies = [
+  "pymobiledevice3==11.15.4",
+  "sslpsk-pmd3==1.0.3; platform_system == 'Windows'",
+  "Pillow==12.3.0",
+  "tomli==2.2.1; python_version < '3.11'",
+]
+
+[project.scripts]
+ipad-control = "ipad_hybrid_control.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

@@ -1,0 +1,14 @@
+[device]
+# Required. Enter the iPad UDID obtained from Sideloadly or an equivalent source.
+udid = ""
+
+# Required. Enter an iPad IP address or hostname reachable on TCP 49152 from the controlling host.
+host = ""
+port = 49152
+
+# Pairing-record path. Relative paths are resolved from config.toml.
+pairing_record = "secrets/remote-pairing.plist"
+
+[output]
+directory = "artifacts"
+thumbnail_width = 768
