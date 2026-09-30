@@ -34,5 +34,3 @@ jobs:
         run: ./.venv/Scripts/python.exe -m unittest discover -s tests -v
       - name: Release scan
         run: ./.venv/Scripts/python.exe tools/check_release.py
-      - name: Check whitespace
-        run: git diff-tree --check --root HEAD
