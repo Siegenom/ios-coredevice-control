@@ -40,6 +40,12 @@ Vision観測は画面の位置関係を取得できます。Semantic観測はVis
 メニュー項目や選択状態を短いテキストとして取得できます。両者の制約が異なるため、用途に応じて
 切り替えます。
 
+## デモ
+
+[![実機iPadデモ：設定項目を移動するAccessibilityフォーカス](docs/ios-coredev-cont_demo.jpg)](docs/ios-coredev-cont_demo.mp4)
+
+実機iPadの「設定」で、Accessibility要素の列挙中にフォーカス枠が項目を順に移動する様子を撮影した短いデモです。画像をクリックすると動画を再生できます。
+
 ## 1. 動作確認済みの構成
 
 以下の構成で、画面取得、Accessibility項目列挙、設定アプリの起動、HIDタップ、スワイプ、

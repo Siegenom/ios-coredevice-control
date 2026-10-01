@@ -35,6 +35,12 @@ ipad-control CLI on Windows
 
 Vision observation can obtain the spatial layout of the screen. Semantic observation does not use a vision model and can obtain the front app's menu items and selection states as short text. Because the two have different limitations, they are switched according to the use case.
 
+## Demo
+
+[![Physical iPad demo: Accessibility focus moving through Settings items](docs/ios-coredev-cont_demo.jpg)](docs/ios-coredev-cont_demo.mp4)
+
+A short physical-device recording showing the focus highlight advancing through Settings items while Accessibility elements are enumerated. Click the image to play the video.
+
 ## 1. Verified configuration
 
 With the following configuration, screen capture, Accessibility element enumeration, launching the Settings app, HID taps, swipes, the Home button, and text entry have been verified.

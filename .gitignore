@@ -11,4 +11,5 @@ artifacts/
 *.png
 *.jpg
 *.jpeg
+!docs/ios-coredev-cont_demo.jpg
 *.log
