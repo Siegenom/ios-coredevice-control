@@ -749,7 +749,7 @@ Apple Accountのパスワード入力まで進まない状態がありました�
 
 公開前検査は、HEADから到達できる全コミットのAuthor/CommitterメールがGitHub noreply形式であることも検査します。完全なGit履歴のあるcheckoutで実行してください。履歴がない場合やshallow cloneでは失敗します。ローカルの退避refは対象外です。CIではクリーンなWindows runnerでsetup.ps1を実行し、ネイティブバックエンド、依存関係の整合性、Pythonのコンパイル、単体テスト、公開前検査を確認します。
 
-check.ps1は最初にsslpsk-pmd3のネイティブバックエンドを読み込めることを検査し、その後で単体テストと公開前検査を続けて実行します。公開前検査はGitの公開候補ファイルを対象にするため、ignoreしたローカル実行時ファイルでは失敗しません。config.toml、ペアリング記録、画像、ログ、生成物ディレクトリをファイル名・配置で拒否し、続いてテキストファイル内のApple Accountメールアドレス、実機UDID、Tailscaleの100.64.0.0/10内のIPv4アドレスを検査します。配布物にはconfig.toml、StikPairの書き出しファイル、pairing_record、artifacts、ログ、仮想環境を含めません。
+check.ps1は最初にsslpsk-pmd3のネイティブバックエンドを読み込めることを検査し、その後で単体テストと公開前検査を続けて実行します。公開前検査はGitの公開候補ファイルを対象にするため、ignoreしたローカル実行時ファイルでは失敗しません。実行時config、ペアリング記録、秘密情報ディレクトリ、リポジトリ直下の生成物／ビルドディレクトリを拒否し、続いてテキストファイル内のApple Accountメールアドレス、実機UDID、Tailscaleの100.64.0.0/10内のIPv4アドレス、秘密鍵マーカーを検査します。サニタイズ済みの文書画像・ログ・ペアリング用途ではないplist fixtureは許可します。配布物にはconfig.toml、StikPairの書き出しファイル、pairing_record、artifacts、secrets、仮想環境を含めません。
 
 ## 24. 参考資料
 

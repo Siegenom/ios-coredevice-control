@@ -10,16 +10,11 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 TEXT_SUFFIXES = {".py", ".ps1", ".md", ".toml", ".txt", ".yml", ".yaml", ".plist"}
 FORBIDDEN_NAMES = {
-    "config.toml",
     "rp_pairing_file.plist",
     "remote-pairing.plist",
-    "screen.png",
-    "screen-thumb.jpg",
-    "after.png",
-    "after-thumb.jpg",
 }
-FORBIDDEN_SUFFIXES = {".log"}
-FORBIDDEN_DIRECTORY_NAMES = {".venv", "__pycache__", "artifacts", "build", "dist", "secrets"}
+FORBIDDEN_ANYWHERE_DIRECTORIES = {".venv", "__pycache__", "secrets"}
+FORBIDDEN_TOP_LEVEL_DIRECTORIES = {"artifacts", "build", "dist"}
 PATTERNS = {
     "Apple Account email": re.compile(r"[A-Za-z0-9._%+-]+@(gmail|icloud|me)\.com", re.I),
     "real iOS UDID": re.compile(r"\b0000[0-9A-F]{4}-[0-9A-F]{16}\b", re.I),
@@ -45,15 +40,18 @@ def release_candidates(root: Path = ROOT) -> list[Path]:
 
 def is_forbidden_release_path(relative: Path) -> bool:
     name = relative.name.lower()
+    parts = tuple(part.lower() for part in relative.parts)
+    if relative == Path("config.toml"):
+        return True
     if name in FORBIDDEN_NAMES:
         return True
-    if relative.suffix.lower() in FORBIDDEN_SUFFIXES:
+    if parts and parts[0] in FORBIDDEN_TOP_LEVEL_DIRECTORIES:
         return True
-    if any(part.lower() in FORBIDDEN_DIRECTORY_NAMES for part in relative.parts[:-1]):
+    if any(part in FORBIDDEN_ANYWHERE_DIRECTORIES for part in parts[:-1]):
         return True
-    # Pairing exports/cache files are secrets even when renamed with a UDID.
+    # pymobiledevice3 remote-pairing cache files contain private key material.
     if relative.suffix.lower() == ".plist" and (
-        "pairing" in name or name.startswith("remote_") or name.startswith("remote-")
+        name.startswith("remote_") or name.startswith("remote-")
     ):
         return True
     return False

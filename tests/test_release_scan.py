@@ -45,24 +45,43 @@ class ReleaseScanTests(unittest.TestCase):
                 ["config.toml: forbidden release file"],
             )
 
-    def test_rejects_nested_generated_artifact_directory(self):
+    def test_rejects_top_level_generated_artifact_directory(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
-            image = root / "tmp" / "artifacts" / "screen.txt"
-            image.parent.mkdir(parents=True)
+            image = root / "artifacts" / "screen.txt"
+            image.parent.mkdir()
             image.write_text("captured screen", encoding="utf-8")
             self.assertEqual(
                 check_release.file_findings([image], root),
-                ["tmp/artifacts/screen.txt: forbidden release file"],
+                ["artifacts/screen.txt: forbidden release file"],
             )
+
+    def test_allows_same_directory_name_below_docs(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            text = root / "docs" / "build" / "notes.txt"
+            text.parent.mkdir(parents=True)
+            text.write_text("documentation", encoding="utf-8")
+            self.assertEqual(check_release.file_findings([text], root), [])
 
     def test_allows_documentation_image_outside_runtime_paths(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
-            image = root / "docs" / "architecture.png"
+            image = root / "docs" / "screen.png"
             image.parent.mkdir()
             image.write_bytes(b"not-a-real-image")
             self.assertEqual(check_release.file_findings([image], root), [])
+
+    def test_allows_non_runtime_log_and_plist(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            log = root / "docs" / "example.log"
+            plist = root / "tests" / "fixture.plist"
+            log.parent.mkdir()
+            plist.parent.mkdir()
+            log.write_text("sanitized example", encoding="utf-8")
+            plist.write_text("<plist><dict/></plist>", encoding="utf-8")
+            self.assertEqual(check_release.file_findings([log, plist], root), [])
 
     def test_rejects_pem_private_key_text(self):
         with tempfile.TemporaryDirectory() as temporary:

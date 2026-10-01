@@ -658,7 +658,7 @@ Run the tests and the pre-release check.
 
 The release check also rejects non-GitHub-noreply Author/Committer emails in every commit reachable from HEAD. Run it in a full Git checkout; missing or shallow history fails the check. Local backup refs are excluded. CI runs setup.ps1 on a clean Windows runner, checks the native backend and dependency consistency, compiles Python files, and runs the tests and release check.
 
-check.ps1 first verifies that the sslpsk-pmd3 native backend can load, then runs the unit tests and the pre-release check in sequence. The pre-release check scans Git release candidates, so ignored local runtime files do not cause a failure. It rejects config.toml and pairing, image, and log files by filename, then inspects text files for the Apple Account email address, device UDID, and IPv4 addresses in Tailscale's 100.64.0.0/10 range. The distribution does not include config.toml, StikPair export files, pairing_record, artifacts, logs, or the virtual environment.
+check.ps1 first verifies that the sslpsk-pmd3 native backend can load, then runs the unit tests and the pre-release check in sequence. The pre-release check scans Git release candidates, so ignored local runtime files do not cause a failure. It rejects the runtime config, pairing records, secret directories, and top-level generated output/build directories, then inspects text files for Apple Account email addresses, device UDIDs, Tailscale-range IPv4 addresses, and private-key markers. Sanitized documentation images, logs, and non-pairing plist fixtures are allowed. The distribution does not include config.toml, StikPair export files, pairing_record, artifacts, secrets, or the virtual environment.
 
 ## 24. References
 

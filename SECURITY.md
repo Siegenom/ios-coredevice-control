@@ -6,7 +6,7 @@ English | [日本語](SECURITY.ja.md)
 
 The StikPair `rp_pairing_file.plist` and the file specified by `device.pairing_record` in the converted `config.toml` contain a private key. Do not attach them to repositories, issues, logs, or chats.
 
-This repository's `.gitignore` excludes `*.plist` and `config.toml`, but also run the following before committing.
+This repository's `.gitignore` excludes the runtime `config.toml`, the `secrets/` directory, known pairing-record filenames, generated `artifacts/`, and local build/cache directories. It intentionally does not ignore all `.plist`, image, or log files, so sanitized fixtures and documentation assets can still be versioned. Also run the following before committing.
 
 ```powershell
 .\check.ps1

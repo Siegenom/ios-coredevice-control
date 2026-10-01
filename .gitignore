@@ -7,9 +7,7 @@ build/
 dist/
 config.toml
 artifacts/
-*.plist
-*.png
-*.jpg
-*.jpeg
-!docs/ios-coredev-cont_demo.jpg
-*.log
+secrets/
+rp_pairing_file.plist
+remote-pairing.plist
+remote_*.plist
