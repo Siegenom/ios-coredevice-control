@@ -43,6 +43,30 @@ Vision observation can obtain the spatial layout of the screen. Semantic observa
 
 A short physical-device recording showing the focus highlight advancing through Settings items while Accessibility elements are enumerated. Click the image to play the video.
 
+## Reproduce this setup with an AI coding agent
+
+A practical way to use this repository is to give the **entire repository** to an AI coding agent and ask it to reproduce the working environment from scratch.
+
+The reproduction target is not merely the code that runs after a device is already connected. The important part is the sequence that gets a physical iOS/iPadOS device communicating with the host in the first place: choosing a compatible device and OS, making the initial wired connection, installing the required tooling on both sides, creating RemotePairing, moving the pairing record to the host, establishing an IP path, setting up the CoreDevice stack, and verifying RSD / DDI / screen / HID communication.
+
+A useful prompt is:
+
+> **Read this entire repository and reproduce this setup from scratch. Walk me through the process all the way from choosing a compatible iOS/iPadOS device and host to establishing verified CoreDevice communication. Use the verified tools in this repository when they are still applicable. If a named app, service, or installation method is obsolete or unavailable, search current documentation or your available knowledge sources and propose a current replacement that fulfills the same role and produces the same required artifact or behavior. Do not skip the initial pairing, installation, networking, or verification steps.**
+
+The names below are therefore **verified implementations, not immutable product requirements**. An agent should reason from the role and the required result first:
+
+| Role | Required result | Verified implementation in this report |
+|---|---|---|
+| Target device and OS | A physical iOS/iPadOS device that supports the chosen RemotePairing workflow | iPad Air (M4), iPadOS 27.0 |
+| Bootstrap connection | The host can trust, identify, and install the pairing helper on the device | USB cable + Apple Mobile Device support on Windows |
+| On-device pairing helper | Creates and exports a RemotePairing record usable by the host stack | StikPair |
+| Host-side app installation/signing | Installs the pairing helper on the physical device | Sideloadly |
+| Host protocol stack | Can consume the pairing record and establish RemotePairing → userspace tunnel → RSD → DDI / CoreDevice services | pymobiledevice3 + sslpsk-pmd3 |
+| Post-pairing network path | The host can reach the device's RemotePairing endpoint over IP | Reachable LAN or access-controlled routed/VPN path |
+| Verification | Confirms each layer before moving on to observation or HID | `doctor`, `status`, then screen / Accessibility / HID checks |
+
+If one of the verified products is no longer usable, the replacement should be chosen by whether it satisfies the corresponding row above, not merely because it has a similar name. Human-only actions such as unlocking the device, entering the passcode, approving trust, or completing Apple Account authentication are still part of the reproduction procedure; the agent should guide the user through them rather than treating them as outside the task.
+
 ## 1. Verified configuration
 
 With the following configuration, screen capture, Accessibility element enumeration, launching the Settings app, HID taps, swipes, the Home button, and text entry have been verified.
@@ -60,6 +84,8 @@ With the following configuration, screen capture, Accessibility element enumerat
 | IPA installation | Sideloadly 0.60 |
 | Network path | An IP network that can reach TCP 49152 on the iPad |
 | Reference implementation | ipad-hybrid-control 0.3.2 |
+
+This table records the exact combination that was verified. It is not a claim that these are the only compatible device, OS, or tool choices. For AI-assisted reproduction, use the role-and-result table above to evaluate current alternatives while keeping this verified combination as the reference path.
 
 > [!NOTE]
 > Windows 11 is the environment in which this configuration was verified. This document does not assert that the mechanism described is specific to Windows. The scripts bundled with this release (setup.ps1, run.ps1, check.ps1) are currently PowerShell-based.
@@ -81,6 +107,8 @@ With the following configuration, screen capture, Accessibility element enumerat
 - **AX Activate**: An activation operation sent to an Accessibility element. In this environment it affects selection and scrolling but does not reliably open UIKit items.
 
 ## 3. What you need
+
+The following sections deliberately use the concrete names from the verified path so that the report remains reproducible. If an AI agent substitutes a component, preserve the same sequence and checkpoints: the device must be installable/trusted, a usable RemotePairing record must be produced, the host must consume it, the IP path must work, and RSD/DDI/CoreDevice communication must be verified before moving on.
 
 ### On the iPad
 
@@ -462,7 +490,7 @@ right can also be specified. After a successful rotation, the RSD connection use
 
 On the iPad used for verification, the coordinate conversion for portrait, landscapeLeft, and landscapeRight was confirmed with on-device gestures. portraitUpsideDown is not included in the reachable orientations because the UI did not rotate to it. On other models, verify each orientation on the device in addition to the distribution's coordinate tests.
 
-## 17. Basic loop for letting an AI agent operate
+## 17. Basic post-connection loop for letting an AI agent operate
 
 ### 17.1 Loop using Vision
 
