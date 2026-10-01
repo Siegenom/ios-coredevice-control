@@ -7,6 +7,10 @@ Windows PCからネットワーク経由でiPadへ接続し、画面取得、Acc
 初回構築ではiPadとWindows PCをUSB接続しますが、RemotePairingの作成後は、両者の間にIP通信経路が
 あればUSBケーブルなしで操作できます。
 
+この動作確認済みの構成ではMacやXcodeを必要としません。Windows 11は検証に使用したホスト環境ですが、
+制御アーキテクチャ自体はWindows固有ではなく、RemotePairing、ユーザー空間RSDトンネル、
+Accessibility観測、CoreDeviceサービスを組み合わせた再現可能な実機制御構成です。
+
 操作経路はWebDriverAgent / XCTest / Appiumを使用せず、RemotePairing、ユーザー空間トンネル、RSD、
 DDI、CoreDevice HID / AppServiceを利用します。本構成ではこの接続・操作基盤を共通化し、
 操作対象を見つける方法だけをVision観測とSemantic観測に分けます。

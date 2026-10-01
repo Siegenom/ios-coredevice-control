@@ -6,6 +6,8 @@ English | [日本語](README.ja.md)
 
 This is a technical report and reference implementation that connects to an iPad over the network from a Windows PC and performs screen capture, Accessibility retrieval, app launching, taps, swipes, button presses, and text entry. The initial setup connects the iPad and the Windows PC by USB, but once RemotePairing has been created, the iPad can be controlled without a USB cable as long as an IP path exists between the two.
 
+The verified workflow does not require a Mac or Xcode. Windows 11 is the tested host environment, but the control architecture itself is not Windows-specific: it combines RemotePairing, a userspace RSD tunnel, Accessibility observation, and CoreDevice services into a reproducible device-control workflow.
+
 The control path does not use WebDriverAgent, XCTest, or Appium; it uses RemotePairing, a userspace tunnel, RSD, DDI, and CoreDevice HID / AppService. This setup shares a single connection and control foundation and splits only the method used to locate the target of an operation into Vision observation and Semantic observation.
 
 This document records the configuration that has been verified to work, the reproduction steps, and known limitations.
