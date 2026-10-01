@@ -13,8 +13,8 @@ FORBIDDEN_NAMES = {
     "rp_pairing_file.plist",
     "remote-pairing.plist",
 }
-FORBIDDEN_ANYWHERE_DIRECTORIES = {".venv", "__pycache__", "secrets"}
-FORBIDDEN_TOP_LEVEL_DIRECTORIES = {"artifacts", "build", "dist"}
+FORBIDDEN_ANYWHERE_DIRECTORIES = {".venv", "__pycache__"}
+FORBIDDEN_TOP_LEVEL_DIRECTORIES = {"artifacts", "build", "dist", "secrets"}
 PATTERNS = {
     "Apple Account email": re.compile(r"[A-Za-z0-9._%+-]+@(gmail|icloud|me)\.com", re.I),
     "real iOS UDID": re.compile(r"\b0000[0-9A-F]{4}-[0-9A-F]{16}\b", re.I),

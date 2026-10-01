@@ -59,10 +59,16 @@ class ReleaseScanTests(unittest.TestCase):
     def test_allows_same_directory_name_below_docs(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
-            text = root / "docs" / "build" / "notes.txt"
-            text.parent.mkdir(parents=True)
-            text.write_text("documentation", encoding="utf-8")
-            self.assertEqual(check_release.file_findings([text], root), [])
+            build_note = root / "docs" / "build" / "notes.txt"
+            secrets_note = root / "docs" / "secrets" / "notes.txt"
+            build_note.parent.mkdir(parents=True)
+            secrets_note.parent.mkdir(parents=True)
+            build_note.write_text("documentation", encoding="utf-8")
+            secrets_note.write_text("documentation about secret handling", encoding="utf-8")
+            self.assertEqual(
+                check_release.file_findings([build_note, secrets_note], root),
+                [],
+            )
 
     def test_allows_documentation_image_outside_runtime_paths(self):
         with tempfile.TemporaryDirectory() as temporary:
