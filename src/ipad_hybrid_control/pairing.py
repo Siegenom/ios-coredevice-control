@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import os
 import plistlib
+import tempfile
 from pathlib import Path
 
 
@@ -49,3 +51,32 @@ def validate_pairing(path: Path, udid: str, *, debug: bool = False) -> list[str]
     if record.get("peer_udid") != udid:
         problems.append("peer_udid does not match the configured UDID")
     return problems
+
+
+def stage_pairing_record(source: Path, destination: Path, udid: str) -> None:
+    """Atomically stage the configured record where pymobiledevice3 loads it."""
+    problems = validate_pairing(source, udid, debug=False)
+    if problems:
+        raise ValueError("invalid configured pairing record: " + "; ".join(problems))
+
+    payload = source.read_bytes()
+    destination.parent.mkdir(parents=True, exist_ok=True)
+
+    # Write in the destination directory so os.replace() stays on the same
+    # filesystem and is atomic.  Avoid exposing the configured source path in
+    # normal exception messages.
+    fd, temporary = tempfile.mkstemp(
+        prefix=f".{destination.name}.",
+        suffix=".tmp",
+        dir=destination.parent,
+    )
+    temporary_path = Path(temporary)
+    try:
+        with os.fdopen(fd, "wb") as handle:
+            handle.write(payload)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temporary_path, destination)
+    finally:
+        if temporary_path.exists():
+            temporary_path.unlink()

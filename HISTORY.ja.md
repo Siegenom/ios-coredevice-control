@@ -4,9 +4,10 @@
 
 ## Unreleased
 
+- 接続前にconfig.tomlで指定したペアリング記録をpymobiledevice3のトランスポートキャッシュへ配置し、設定した記録を認証に使用するよう修正した。
 - Windowsセットアップでsslpsk-pmd3のネイティブバックエンドを検査し、必要な場合はPython 3.10同梱OpenSSL DLLの名前不一致を仮想環境内で修復するようにした。
 - 同じiPadで別のCoreDeviceメディア/HIDセッションが動作していると、RemotePairing、ユーザー空間トンネル、RSDが正常でもScreenCaptureServiceやHIDがタイムアウトし得ることを明記した。
-- 公開前検査をGitの公開候補ファイルに対して行い、config.tomlなど意図的にignoreした実行時秘密情報は対象外とするようにした。
+- 公開前検査をGitの公開候補ファイルに対して行い、実行時の秘密情報と生成物を名前または配置で拒否し、意図的にignoreしたローカルファイルは対象外とするようにした。
 
 ## 0.3.2
 

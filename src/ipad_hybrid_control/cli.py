@@ -259,7 +259,10 @@ def main(argv: list[str] | None = None) -> int:
                 args.device_udid or config.udid,
                 args.output or config.pairing_record,
             )
-            emit({"ok": True, "pairingRecord": str(destination.resolve())})
+            emit({
+                "ok": True,
+                "pairingRecord": str(destination.resolve()) if args.debug else "[redacted]",
+            })
             return 0
 
         config = load_config(args)
@@ -272,9 +275,13 @@ def main(argv: list[str] | None = None) -> int:
     except BaseException as exc:
         if args.debug:
             raise
-        error = (f"{type(exc).__name__}: doctor failed; use --debug for details"
-                 if args.command == "doctor" else f"{type(exc).__name__}: {exc}")
-        emit({"ok": False, "error": error})
+        # Exception text from libraries can contain absolute paths, host names,
+        # device identifiers, or other local details.  Keep normal CLI output
+        # safe for logs/issues; --debug remains the explicit opt-in path.
+        emit({
+            "ok": False,
+            "error": f"{type(exc).__name__}: {args.command} failed; use --debug for details",
+        })
         return 1
 
 

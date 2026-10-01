@@ -4,9 +4,10 @@ English | [日本語](HISTORY.ja.md)
 
 ## Unreleased
 
+- Fixed the connection path so it stages the pairing record selected by config.toml into pymobiledevice3's transport cache before every connection.
 - Fixed Windows setup so the sslpsk-pmd3 native backend is validated and the Python 3.10 OpenSSL DLL naming mismatch is repaired inside the virtual environment when required.
 - Clarified that a separate CoreDevice media/HID session on the same iPad can cause ScreenCaptureService or HID timeouts even when RemotePairing, the userspace tunnel, and RSD are healthy.
-- Updated the release check to scan Git release candidates while excluding intentionally ignored runtime secrets such as config.toml.
+- Updated the release check to scan Git release candidates, reject runtime secrets and generated files by name or location, and exclude intentionally ignored local files.
 
 ## 0.3.2
 

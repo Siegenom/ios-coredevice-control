@@ -40,6 +40,35 @@ class DoctorTests(unittest.TestCase):
                 self.assertEqual(main(["doctor"]), 1)
         self.assertNotIn("private-value", output.getvalue())
 
+    def test_connected_command_failure_does_not_leak_exception_text(self):
+        output = io.StringIO()
+        config = DeviceConfig("private-device", "private-host")
+        with patch("ipad_hybrid_control.cli.load_config", return_value=config), patch(
+            "ipad_hybrid_control.cli.run_connected",
+            new=lambda *_args, **_kwargs: object(),
+        ), patch(
+            "ipad_hybrid_control.cli.run_sync",
+            side_effect=ValueError(r"C:\Users\private-name\secret"),
+        ):
+            with contextlib.redirect_stdout(output):
+                self.assertEqual(main(["status"]), 1)
+        self.assertNotIn("private-name", output.getvalue())
+        self.assertIn("use --debug for details", output.getvalue())
+
+    def test_convert_pairing_success_redacts_destination(self):
+        output = io.StringIO()
+        destination = Path(r"C:\Users\private-name\remote-pairing.plist")
+        config = DeviceConfig("private-device", "private-host", pairing_record=destination)
+        with patch("ipad_hybrid_control.cli.load_config", return_value=config), patch(
+            "ipad_hybrid_control.cli.convert_pairing",
+            return_value=destination,
+        ):
+            with contextlib.redirect_stdout(output):
+                self.assertEqual(main(["convert-pairing", "source.plist"]), 0)
+        payload = json.loads(output.getvalue())
+        self.assertEqual(payload["pairingRecord"], "[redacted]")
+        self.assertNotIn("private-name", output.getvalue())
+
     def test_success_stays_redacted(self):
         config = DeviceConfig("private-device", "private-host")
         with patch("ipad_hybrid_control.cli.validate_pairing", return_value=[]), patch(

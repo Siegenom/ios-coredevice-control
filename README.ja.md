@@ -250,9 +250,10 @@ config.tomlを保存してから実行します。
 .\run.ps1 convert-pairing .\rp_pairing_file.plist
 ~~~
 
-変換後の記録はconfig.tomlのpairing_recordへ保存されます。元ファイルと変換後ファイルの両方を
-秘密情報として扱います。変換を確認した後、配布フォルダーへ置いた元ファイルは安全な場所へ
-移すか削除します。
+変換後の記録はconfig.tomlのpairing_recordへ保存されます。接続のたびに、この指定先の記録から
+pymobiledevice3の内部トランスポートキャッシュを更新するため、認証にはconfig.tomlで指定した
+記録が使われます。元ファイルと変換後ファイルの両方を秘密情報として扱います。変換を確認した後、
+配布フォルダーへ置いた元ファイルは安全な場所へ移すか削除します。
 
 ## 11. WindowsからiPadへ到達できるようにする
 
@@ -742,10 +743,7 @@ Apple Accountのパスワード入力まで進まない状態がありました�
 
 公開前検査は、HEADから到達できる全コミットのAuthor/CommitterメールがGitHub noreply形式であることも検査します。完全なGit履歴のあるcheckoutで実行してください。履歴がない場合やshallow cloneでは失敗します。ローカルの退避refは対象外です。CIではクリーンなWindows runnerでsetup.ps1を実行し、ネイティブバックエンド、依存関係の整合性、Pythonのコンパイル、単体テスト、公開前検査を確認します。
 
-check.ps1は最初にsslpsk-pmd3のネイティブバックエンドを読み込めることを検査し、その後で単体テストと公開前検査を続けて実行します。公開前検査は、Apple Accountのメール
-アドレス、実機UDID、Tailscaleの100.64.0.0/10内のIPv4アドレス、ペアリング秘密鍵がテキスト
-ファイルへ混入していないか検査します。配布物にはconfig.toml、StikPairの書き出しファイル、
-pairing_record、artifacts、ログ、仮想環境を含めません。
+check.ps1は最初にsslpsk-pmd3のネイティブバックエンドを読み込めることを検査し、その後で単体テストと公開前検査を続けて実行します。公開前検査はGitの公開候補ファイルを対象にするため、ignoreしたローカル実行時ファイルでは失敗しません。config.toml、ペアリング記録、画像、ログ、生成物ディレクトリをファイル名・配置で拒否し、続いてテキストファイル内のApple Accountメールアドレス、実機UDID、Tailscaleの100.64.0.0/10内のIPv4アドレスを検査します。配布物にはconfig.toml、StikPairの書き出しファイル、pairing_record、artifacts、ログ、仮想環境を含めません。
 
 ## 24. 参考資料
 

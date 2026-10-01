@@ -6,6 +6,7 @@ from types import SimpleNamespace
 from typing import Any, AsyncIterator
 
 from .config import DeviceConfig
+from .pairing import stage_pairing_record
 
 
 CONNECT_TIMEOUT = 30.0
@@ -20,6 +21,7 @@ async def open_rsd(config: DeviceConfig) -> AsyncIterator[Any]:
 
     tunnel_service.USE_USERSPACE_TUNNEL = True
     pairing = RemotePairingTunnelService(config.udid, config.host, config.port)
+    stage_pairing_record(config.pairing_record, pairing.pair_record_path, config.udid)
     stack = AsyncExitStack()
     previous = None
     try:
