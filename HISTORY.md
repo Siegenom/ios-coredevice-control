@@ -9,7 +9,6 @@ English | [日本語](HISTORY.ja.md)
 - Clarified that a separate CoreDevice media/HID session on the same iPad can cause ScreenCaptureService or HID timeouts even when RemotePairing, the userspace tunnel, and RSD are healthy.
 - Updated the release check to scan Git release candidates, reject runtime secrets and generated files by name or location, and exclude intentionally ignored local files.
 - Narrowed `.gitignore` and release-path rules so only actual runtime secrets and generated output are blocked; sanitized documentation images, logs, and non-pairing plist fixtures remain versionable.
-- Added an AI-assisted reproduction guide that treats the full device-to-host bootstrap sequence as part of the reproducible system and separates tool roles from the specific products used in the verified configuration.
 
 ## 0.3.2
 
