@@ -466,7 +466,7 @@ right can also be specified. After a successful rotation, the RSD connection use
 
 On the iPad used for verification, the coordinate conversion for portrait, landscapeLeft, and landscapeRight was confirmed with on-device gestures. portraitUpsideDown is not included in the reachable orientations because the UI did not rotate to it. On other models, verify each orientation on the device in addition to the distribution's coordinate tests.
 
-## 17. Basic post-connection loop for letting an AI agent operate
+## 17. Basic loop for letting an AI agent operate
 
 ### 17.1 Loop using Vision
 
